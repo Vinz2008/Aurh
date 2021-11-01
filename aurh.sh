@@ -4,7 +4,7 @@ git clone https://aur.archlinux.org/$2.git
 cd $2
 makepkg -si
 cd ..
-rm $2
+rm -rf  $2
 else
 echo 'Use a valid option'
 fi
