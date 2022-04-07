@@ -1,3 +1,6 @@
+all:
+	gcc main.c -o aurh
+
 install:
 	cp aurh.sh /usr/bin/aurh
 
