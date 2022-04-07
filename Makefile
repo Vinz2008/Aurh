@@ -1,8 +1,11 @@
+CC=gcc
+CFLAGS=-lcurl
+
 all:
-	gcc main.c -o aurh
+	$(CC) main.c $(CFLAGS) -o aurh
 
 install:
-	cp aurh.sh /usr/bin/aurh
+	cp aurh /usr/bin/aurh
 
 uninstall:
 	rm /usr/bin/aurh
