@@ -28,10 +28,11 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
  
   return realsize;
 }
-int InstallAurPackage( char repoName[10]){
+int InstallAurPackage( char repoName[20]){
     char command[100];
     char answer;
-    char temp[10];
+    char temp[20];
+    system("sudo pacman -Syu");
     printf("Do you want to see the PKGBUILD ? [Y/N] : ");
     scanf("%c", &answer);
     switch (answer)
@@ -101,9 +102,21 @@ int InstallAurPackage( char repoName[10]){
     system(command); //CD REPO and BUILD PACKAGE
     return 0;
 }
+
+
+void RemovePackage(char* program){
+     char command[40];
+     snprintf(command, 40, "sudo pacman -R %s", program);
+     printf("command : %s\n", command);
+     system(command);
+}
+
 int main(int argc, char* argv[]){
     int i;
     char repoName[20];
+    char program[20];
+    int installmode = 0;
+    int removemode = 0;
    if(argc==1)
     {
     printf(BRED "ERROR: No Extra Command Line Argument Passed Other Than Program Name\n" reset);
@@ -116,10 +129,20 @@ int main(int argc, char* argv[]){
         //usage();
         exit(0);
         }
-        else if (strcmp(argv[i], "-S") ==  0){
+        else if (strcmp(argv[i], "-S") ==  0 || strcmp(argv[i], "install") ==  0){
             strcpy(repoName, argv[i + 1]); 
+            installmode = 1;
         }
+        else if (strcmp(argv[i], "-R") == 0 || strcmp(argv[i], "remove") == 0){
+	    strcpy(program, argv[i + 1]);
+	    removemode = 1;
+	}
+        
     }
-    InstallAurPackage(repoName);
+    if (installmode == 1){
+        InstallAurPackage(repoName);
+    } else if (removemode == 1){
+        RemovePackage(program);
+    }
     return 0;
 }
