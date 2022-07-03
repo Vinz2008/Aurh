@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <curl/curl.h>
 #include "libs/color.h"
@@ -28,11 +30,23 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
  
   return realsize;
 }
-int InstallAurPackage( char repoName[20]){
+
+void updatePacman(){
+    system("sudo pacman -Syu");
+} 
+
+
+void cleanCacheFolder(){
+    system("rm -rf ~/.cache/aurh");
+}
+
+
+
+void installAurPackage(char repoName[20]){
     char command[100];
     char answer;
     char temp[20];
-    system("sudo pacman -Syu");
+    updatePacman();
     printf("Do you want to see the PKGBUILD ? [Y/N] : ");
     scanf("%c", &answer);
     switch (answer)
@@ -100,11 +114,10 @@ int InstallAurPackage( char repoName[20]){
     strcat(command, "makepkg -si");
     printf("command : %s\n" , command);
     system(command); //CD REPO and BUILD PACKAGE
-    return 0;
 }
 
 
-void RemovePackage(char* program){
+void removePackage(char* program){
      char command[40];
      snprintf(command, 40, "sudo pacman -R %s", program);
      printf("command : %s\n", command);
@@ -117,11 +130,11 @@ int main(int argc, char* argv[]){
     char program[20];
     int installmode = 0;
     int removemode = 0;
-   if(argc==1)
-    {
-    printf(BRED "ERROR: No Extra Command Line Argument Passed Other Than Program Name\n" reset);
-    //printf(GRN "Do --help to know how to use this cli application\n" reset);
-    exit(0);
+    int cleanmode = 0;
+    if(argc==1){
+        printf(BRED "ERROR: No Extra Command Line Argument Passed Other Than Program Name\n" reset);
+        //printf(GRN "Do --help to know how to use this cli application\n" reset);
+        exit(0);
     }
     for (i=1; i < argc; i++ ){
         if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0){
@@ -137,12 +150,17 @@ int main(int argc, char* argv[]){
 	    strcpy(program, argv[i + 1]);
 	    removemode = 1;
 	}
+        else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "clean") == 0){
+        cleanmode = 1;
+        }
         
     }
     if (installmode == 1){
-        InstallAurPackage(repoName);
+        installAurPackage(repoName);
     } else if (removemode == 1){
-        RemovePackage(program);
+        removePackage(program);
+    } else if (cleanmode == 1) {
+        cleanCacheFolder();
     }
     return 0;
 }
