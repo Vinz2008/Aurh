@@ -60,7 +60,7 @@ void installAurPackage(char repoName[20]){
         chunk.size = 0;
         curl = curl_easy_init();
         if (curl){
-            char url[120];
+            char* url = malloc(120);
             char* header;
             strcpy(url, "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=");
             strcat(url, repoName);
@@ -85,7 +85,7 @@ void installAurPackage(char repoName[20]){
             }
             curl_easy_cleanup(curl);
             free(chunk.memory);
-
+            free(url);
 
         }
         else {
@@ -117,7 +117,7 @@ void installAurPackage(char repoName[20]){
 
 void installPacmanPackage(char reponame[20]){
     char* command = malloc(100 * sizeof(char));
-    strcpy(command, "sudo pacman -S");
+    strcpy(command, "sudo pacman -S ");
     strcat(command, reponame);
     system(command);
     free(command);
@@ -133,18 +133,21 @@ int testPacmanPackageExist(char repoName[20]){
         char* header;
         strcpy(url, "https://archlinux.org/packages/community/x86_64/");
         strcat(url, repoName);
+        strcat(url, "/");
         printf("url : %s\n", url);
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1);
         res = curl_easy_perform(curl);
+        printf("TEST\n");
         if(res != CURLE_OK) {
         printf(BRED "curl request failed: %s\n",
         curl_easy_strerror(res));
         exit(0);
         }
-        long http_code = 0;
+        long http_code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
         printf("http_code : %ld\n", http_code);
         if (http_code == 200){
