@@ -1,7 +1,7 @@
 
 
 CC=gcc
-CFLAGS=-lcurl -Wall
+CFLAGS=-lcurl -Wall -O2
 CFLAGS += $(shell pkg-config --cflags json-c)
 LDFLAGS += $(shell pkg-config --libs json-c)
 
