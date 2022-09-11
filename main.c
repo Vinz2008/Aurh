@@ -50,7 +50,8 @@ void installAurPackage(char repoName[20]){
     char command[100];
     char answer;
     char temp[20];
-    printf("Do you want to see the PKGBUILD ? [Y/N] : ");
+    printf(BBLU "--> " reset);
+    printf(BWHT"Do you want to see the PKGBUILD ? [Y/N] : " reset);
     scanf("%c", &answer);
     switch (answer)
     {
