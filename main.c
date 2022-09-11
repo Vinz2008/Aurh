@@ -50,7 +50,6 @@ void installAurPackage(char repoName[20]){
     char command[100];
     char answer;
     char temp[20];
-    updatePacman();
     printf("Do you want to see the PKGBUILD ? [Y/N] : ");
     scanf("%c", &answer);
     switch (answer)
@@ -163,6 +162,7 @@ int testPacmanPackageExist(char repoName[20]){
 }
 
 void installAurOrPacmanPackage(char repoName[20]){
+    updatePacman();
     if (testPacmanPackageExist(repoName) == 1){
         installPacmanPackage(repoName);
     } else {
