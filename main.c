@@ -139,7 +139,6 @@ int testPacmanPackageExist(char repoName[20]){
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
         res = curl_easy_perform(curl);
-        printf("TEST\n");
         if(res != CURLE_OK) {
         printf(BRED "curl request failed: %s\n",
         curl_easy_strerror(res));
