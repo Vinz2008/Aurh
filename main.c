@@ -49,19 +49,20 @@ void cleanCacheFolder(){
 void installAurPackage(char repoName[20]){
     char command[100];
     char answer;
-    char temp[20];
+    char temp;
     printf(BBLU "--> " reset);
     printf(BWHT"Do you want to see the PKGBUILD ? [Y/N] : " reset);
     scanf("%c", &answer);
     switch (answer)
     {
+    case '\n':
+    case ' ':
     case 'Y':
         chunk.memory = malloc(1);
         chunk.size = 0;
         curl = curl_easy_init();
         if (curl){
             char* url = malloc(120);
-            char* header;
             strcpy(url, "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=");
             strcat(url, repoName);
             printf("url : %s\n", url);
@@ -79,8 +80,8 @@ void installAurPackage(char repoName[20]){
             printf("%s\n ", chunk.memory);
             printf(" ");
             printf("Do you want to coninue ? [Y/N] : ");
-            scanf("%s", &temp);
-            if (strcmp(temp,"Y") != 0){
+            scanf(" %c", &temp);
+            if (temp == 'N'){
                 exit(0);
             }
             curl_easy_cleanup(curl);
@@ -130,7 +131,6 @@ int testPacmanPackageExist(char repoName[20]){
     curl = curl_easy_init();
     if (curl){
         char url[120];
-        char* header;
         strcpy(url, "https://archlinux.org/packages/community/x86_64/");
         strcat(url, repoName);
         strcat(url, "/");
@@ -177,14 +177,23 @@ void removePackage(char* program){
     system(command);
 }
 
+void build(){
+    system("makepkg -si");
+}
+
+void buildPackage(){
+    system("makepkg -s");
+}
+
 int main(int argc, char* argv[]){
     curl_global_init(CURL_GLOBAL_ALL);
-    int i;
+    register int i;
     char repoName[20];
     char program[20];
     int installmode = 0;
     int removemode = 0;
     int cleanmode = 0;
+    int buildpackagemode, buildmode = 0;
     if(argc==1){
         printf(BRED "ERROR: No Extra Command Line Argument Passed Other Than Program Name\n" reset);
         //printf(GRN "Do --help to know how to use this cli application\n" reset);
@@ -207,6 +216,12 @@ int main(int argc, char* argv[]){
         else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "clean") == 0){
         cleanmode = 1;
         }
+        else if (strcmp(argv[i], "build_package") == 0){
+            buildpackagemode = 1;
+        }
+        else if (strcmp(argv[i], "build") == 0){
+            buildmode = 1;
+        }
         
     }
     if (installmode == 1){
@@ -215,6 +230,10 @@ int main(int argc, char* argv[]){
         removePackage(program);
     } else if (cleanmode == 1) {
         cleanCacheFolder();
+    } else if (buildpackagemode == 1){
+        buildPackage();
+    } else if (buildmode == 1){
+        build();
     }
     return 0;
 }
