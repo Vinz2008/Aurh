@@ -1,12 +1,9 @@
 
 
 CC=gcc
-CFLAGS=-lcurl -Wall -O3
-CFLAGS += $(shell pkg-config --cflags json-c)
-LDFLAGS += $(shell pkg-config --libs json-c)
-
-
-
+CFLAGS=-Wall -O3
+CFLAGS += $(shell pkg-config --cflags libcurl)
+LDFLAGS += $(shell pkg-config --libs libcurl)
 
 all:
 	$(CC) main.c $(CFLAGS) -o aurh $(LDFLAGS)
