@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -193,7 +194,8 @@ int main(int argc, char* argv[]){
     int installmode = 0;
     int removemode = 0;
     int cleanmode = 0;
-    int buildpackagemode, buildmode = 0;
+    int buildpackagemode = 0;
+    int buildmode = 0;
     if(argc==1){
         printf(BRED "ERROR: No Extra Command Line Argument Passed Other Than Program Name\n" reset);
         //printf(GRN "Do --help to know how to use this cli application\n" reset);
